@@ -9,8 +9,8 @@ let flatten (l : 'a node list) =
     | hd :: tl -> (
         match hd with
         | One one ->
-            let u = List.append flatten [ one ] in
-            loop tl u
+            let f = List.append flatten [ one ] in
+            loop tl f
         | Many many ->
             let f = loop many flatten in
             if List.length tl >= 1 then loop tl f else f)
