@@ -4,16 +4,21 @@ let compress l =
   let rec loop l mem compressed =
     match l with
     | [] -> compressed
-    | hd :: tl ->
-        let exists = List.exists (fun s -> s == mem) l in
+    | hd :: tl -> (
+        match mem with
+        | None ->
+            (* None = The first element of the list, so it will always be appended *)
+            loop tl (Some hd) [ hd ]
+        | Some m ->
+            let exists = List.exists (fun s -> s = m) l in
 
-        if (hd == mem && exists == false) || hd != mem then
-          let compressed = List.append compressed [ hd ] in
-          loop tl hd compressed
-        else loop tl hd compressed
+            if (hd = m && exists == false) || not (hd = m) then
+              let compressed = List.append compressed [ hd ] in
+              loop tl (Some hd) compressed
+            else loop tl (Some hd) compressed)
   in
 
-  loop l "" []
+  loop l None []
 
 (* res = ["a"; "b"; "c"; "a"; "d"; "e"] *)
 let res =
