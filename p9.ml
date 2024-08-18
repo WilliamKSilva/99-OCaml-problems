@@ -29,19 +29,22 @@ let pack l =
         match last_packed with
         | None ->
             let packed = [ [ hd ] ] in
-            loop tl hd packed
-        | Some last_packed ->
-            if hd = mem then
-              let p = List.append last_packed [ hd ] in
-              let packed = update_last packed [] p in
-              loop tl hd packed
-            else if not (hd = mem) then
-              let packed = List.append packed [ [ hd ] ] in
-              loop tl hd packed
-            else loop tl hd packed)
+            loop tl (Some hd) packed
+        | Some last_packed -> (
+            match mem with
+            | None -> []
+            | Some m ->
+                if hd = m then
+                  let p = List.append last_packed [ hd ] in
+                  let packed = update_last packed [] p in
+                  loop tl (Some hd) packed
+                else if not (hd = m) then
+                  let packed = List.append packed [ [ hd ] ] in
+                  loop tl (Some hd) packed
+                else loop tl (Some hd) packed))
   in
 
-  loop l "" []
+  loop l None []
 
 (* res = [["a"; "a"; "a"; "a"]; ["b"]; ["c"; "c"]; ["a"; "a"]; ["d"; "d"];
    ["e"; "e"; "e"; "e"]] *)
